@@ -2,4 +2,6 @@
 members = [
     "typeinfo-core",
     "typeinfo-macro",
+    "typeinfo-test",
 ]
+resolver = "2"

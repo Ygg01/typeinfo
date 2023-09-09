@@ -1,14 +1,52 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+extern crate typeinfo_core;
+// extern crate proc_macro2;
+extern crate quote;
+extern crate syn;
+
+use proc_macro::TokenStream;
+use syn::{DeriveInput, Data};
+use typeinfo_core::Reflect;
+use quote::{quote, ToTokens};
+
+
+#[proc_macro_derive(Reflect)]
+pub fn reflect_derive(ty: TokenStream) -> TokenStream {
+    let tree = impl_generics(ty);
+    tree.into_token_stream().into()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+fn impl_generics(input: TokenStream) -> impl ToTokens {
+    let ast: DeriveInput = syn::parse(input).unwrap();
+    let name = &ast.ident;
+    let generics = &ast.generics;
+
+    let (impl_generics, _ty_generics, _where_clause) = generics.split_for_impl();
+
+    #[allow(clippy::let_and_return)]
+    let tree = match ast.data {
+        Data::Struct(ref _data) => {
+
+            quote! {
+                #[allow(non_snake_case, non_camel_case_types)]
+                impl #impl_generics #name{
+
+                    const fn typeinfo() -> ::typeinfo_core::Type {
+                        ::typeinfo_core::Type {
+                            name: "#name",
+                            inner:  ::typeinfo_core::TypeInner::None,
+                            layout: ::core::alloc::Layout::from_size_align(0, 0),
+                            generics: &[],
+                            lifetimes: &[],
+                        }
+
+                    }
+                }
+            }
+        }
+        _ => panic!("Only Structs are supported. Enums/Unions cannot be turned into Generics."),
+    };
+
+    //     print!("{}", tree);
+    tree
 }

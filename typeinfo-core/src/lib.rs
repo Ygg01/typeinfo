@@ -1,22 +1,23 @@
+#!feature[const_trait_impl]
 use core::alloc::Layout;
 
 /// Result of `typeinfo!`
-struct Type {
-    name: &'static str, // result of `type_name`
-    inner: TypeInner,
-    layout: Layout,
-    generics: &'static [Generic],
-    lifetimes: &'static [LifetimeTy],
+pub struct Type {
+    pub name: &'static str, // result of `type_name`
+    pub inner: TypeInner,
+    pub layout: Layout,
+    pub generics: &'static [Generic],
+    pub lifetimes: &'static [LifetimeTy],
 }
 
-struct DiscriminantTy {
-    name: &'static str,
+pub struct DiscriminantTy {
+    pub name: &'static str,
     // Zero based index of the enumeration
-    discriminant: isize,
+    pub discriminant: isize,
 }
 
-struct LifetimeTy {
-    name: &'static str,
+pub struct LifetimeTy {
+    pub name: &'static str,
 }
 
 // impl Type {
@@ -26,34 +27,34 @@ struct LifetimeTy {
 //     const fn variant(name: &'static str) -> &'static EnumVariant;
 // }
 
-enum TypeInner {
+pub enum TypeInner {
     Struct(StructTy),
     Enum(EnumTy),
+    None,
 }
 
-struct StructTy {
-    fields: &'static [Field],
+pub struct StructTy {
+    pub fields: &'static [Field],
 }
-struct EnumTy {
-    variants: &'static [EnumVariant],
-}
-
-struct EnumVariant {
-    
-    fields: &'static [Field],
-    discriminant: DiscriminantTy,
-    value: Option<isize>, // Value of C-style enums
+pub struct EnumTy {
+    pub variants: &'static [EnumVariant],
 }
 
-struct Field {
+pub struct EnumVariant {
+    pub fields: &'static [Field],
+    pub discriminant: DiscriminantTy,
+    pub value: Option<isize>, // Value of C-style enums
+}
+
+pub struct Field {
     /// Field type
-    field_type: Type,
+    pub field_type: Type,
     /// Field name if a named struct
-    name: Option<&'static str>,
+    pub name: Option<&'static str>,
     /// Field count within the struct as defined
-    field_index: usize,
+    pub field_index: usize,
     // offset in implementation
-    offset: usize,
+    pub offset: usize,
 }
 
 // impl Field {
@@ -67,12 +68,14 @@ struct Field {
 //     }
 // }
 
-struct Generic {
-    ty: Type,
-    default: Option<Type>,
+pub struct Generic {
+    pub ty: Type,
+    pub default: Option<Type>,
 }
 
 // impl StructTy { // similar for EnumTy with Variant
 //     /// Get a field by name at compile time, compile_error if it doesn't exist
 //     const fn field(name: &'static str) -> &'static Field;
 // }
+
+pub trait Reflect {}

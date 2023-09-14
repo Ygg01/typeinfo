@@ -2,20 +2,38 @@
 use core::alloc::Layout;
 
 /// Result of `typeinfo!`
+#[derive(Clone, Debug)]
 pub struct Type {
-    pub name: &'static str, // result of `type_name`
+    pub name: &'static str,
+    // result of `type_name`
     pub inner: TypeInner,
     pub layout: Layout,
     pub generics: &'static [Generic],
     pub lifetimes: &'static [LifetimeTy],
 }
 
+impl Default for Type {
+    fn default() -> Self {
+        Type {
+            name: &"",
+            inner: TypeInner::default(),
+            layout: unsafe {
+                Layout::from_size_align_unchecked(0, 2)
+            },
+            generics: &[],
+            lifetimes: &[],
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default)]
 pub struct DiscriminantTy {
     pub name: &'static str,
     // Zero based index of the enumeration
     pub discriminant: isize,
 }
 
+#[derive(Clone, Debug, Default)]
 pub struct LifetimeTy {
     pub name: &'static str,
 }
@@ -27,25 +45,32 @@ pub struct LifetimeTy {
 //     const fn variant(name: &'static str) -> &'static EnumVariant;
 // }
 
+#[derive(Clone, Debug, Default)]
 pub enum TypeInner {
     Struct(StructTy),
     Enum(EnumTy),
+    #[default]
     None,
 }
 
+#[derive(Clone, Debug, Default)]
 pub struct StructTy {
     pub fields: &'static [Field],
 }
+
+#[derive(Clone, Debug, Default)]
 pub struct EnumTy {
     pub variants: &'static [EnumVariant],
 }
 
+#[derive(Clone, Debug, Default)]
 pub struct EnumVariant {
     pub fields: &'static [Field],
     pub discriminant: DiscriminantTy,
     pub value: Option<isize>, // Value of C-style enums
 }
 
+#[derive(Clone, Debug, Default)]
 pub struct Field {
     /// Field type
     pub field_type: Type,
@@ -68,6 +93,7 @@ pub struct Field {
 //     }
 // }
 
+#[derive(Clone, Debug, Default)]
 pub struct Generic {
     pub ty: Type,
     pub default: Option<Type>,

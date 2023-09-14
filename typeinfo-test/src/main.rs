@@ -6,5 +6,5 @@ struct X {
 }
 
 fn main() {
-    println!("Hello, world!", X::typeinfo());
+    println!("{:?}", X::typeinfo());
 }

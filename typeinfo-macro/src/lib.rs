@@ -4,6 +4,7 @@ extern crate quote;
 extern crate syn;
 
 use proc_macro::TokenStream;
+use std::fmt::format;
 use syn::{DeriveInput, Data};
 use typeinfo_core::Reflect;
 use quote::{quote, ToTokens};
@@ -27,15 +28,19 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
     let tree = match ast.data {
         Data::Struct(ref _data) => {
 
+            let ident_str = name.to_string();
             quote! {
                 #[allow(non_snake_case, non_camel_case_types)]
                 impl #impl_generics #name{
 
                     const fn typeinfo() -> ::typeinfo_core::Type {
+                        use core::alloc::Layout;
                         ::typeinfo_core::Type {
-                            name: "#name",
+                            name: &#ident_str,
                             inner:  ::typeinfo_core::TypeInner::None,
-                            layout: ::core::alloc::Layout::from_size_align(0, 0),
+                            layout: unsafe {
+                                Layout::from_size_align_unchecked(0, 2)
+                            },
                             generics: &[],
                             lifetimes: &[],
                         }

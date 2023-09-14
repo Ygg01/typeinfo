@@ -38,9 +38,7 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
                         ::typeinfo_core::Type {
                             name: &#ident_str,
                             inner:  ::typeinfo_core::TypeInner::None,
-                            layout: unsafe {
-                                Layout::from_size_align_unchecked(0, 2)
-                            },
+                            layout: Layout::new::<#name>(),
                             generics: &[],
                             lifetimes: &[],
                         }

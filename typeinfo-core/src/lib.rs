@@ -5,7 +5,6 @@ use core::alloc::Layout;
 #[derive(Clone, Debug)]
 pub struct Type {
     pub name: &'static str,
-    // result of `type_name`
     pub inner: TypeInner,
     pub layout: Layout,
     pub generics: &'static [Generic],
@@ -17,9 +16,7 @@ impl Default for Type {
         Type {
             name: &"",
             inner: TypeInner::default(),
-            layout: unsafe {
-                Layout::from_size_align_unchecked(0, 2)
-            },
+            layout: Layout::new::<Self>(),
             generics: &[],
             lifetimes: &[],
         }

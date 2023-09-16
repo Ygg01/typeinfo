@@ -44,10 +44,10 @@ pub struct LifetimeTy {
 
 #[derive(Clone, Debug, Default)]
 pub enum TypeInner {
+    #[default]
     Struct(StructTy),
     Enum(EnumTy),
-    #[default]
-    None,
+    Union(UnionTy),
 }
 
 #[derive(Clone, Debug, Default)]
@@ -58,6 +58,11 @@ pub struct StructTy {
 #[derive(Clone, Debug, Default)]
 pub struct EnumTy {
     pub variants: &'static [EnumVariant],
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct UnionTy {
+    pub fields: &'static [Field],
 }
 
 #[derive(Clone, Debug, Default)]

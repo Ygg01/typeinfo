@@ -1,10 +1,12 @@
+mod expanded;
+
 use typeinfo_macro::Reflect;
 
 #[derive(Reflect)]
-struct X {
-    field: i32,
+struct Foo<T> {
+    field: T,
 }
 
 fn main() {
-    println!("{:?}", X::typeinfo());
+    println!("{:?}", Foo::<i32>::typeinfo());
 }

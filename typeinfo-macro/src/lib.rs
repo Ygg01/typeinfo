@@ -22,10 +22,10 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
     let ident_str = name.to_string();
     let generics = &ast.generics;
 
-    let (impl_generics, _ty_generics, _where_clause) = generics.split_for_impl();
+    let (impl_generics, ty_generics, _where_clause) = generics.split_for_impl();
 
     #[allow(clippy::let_and_return)]
-    let tree = match ast.data {
+    match ast.data {
         Data::Struct(ref _data) => {
 
         }
@@ -33,14 +33,14 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
     };
     quote! {
         #[allow(non_snake_case, non_camel_case_types)]
-        impl #impl_generics #name{
+        impl #impl_generics #name #ty_generics{
 
             const fn typeinfo() -> ::typeinfo_core::Type {
                 use core::alloc::Layout;
                 ::typeinfo_core::Type {
                     name: &#ident_str,
                     inner:  ::typeinfo_core::TypeInner::None,
-                    layout: Layout::new::<#name>(),
+                    layout: Layout::new::<#name #ty_generics>(),
                     generics: &[],
                     lifetimes: &[],
                 }

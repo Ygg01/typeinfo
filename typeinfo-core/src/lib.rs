@@ -11,26 +11,15 @@ pub struct Type {
     pub lifetimes: &'static [LifetimeTy],
 }
 
-impl Default for Type {
-    fn default() -> Self {
-        Type {
-            name: &"",
-            inner: TypeInner::default(),
-            layout: Layout::new::<Self>(),
-            generics: &[],
-            lifetimes: &[],
-        }
-    }
-}
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct DiscriminantTy {
     pub name: &'static str,
     // Zero based index of the enumeration
     pub discriminant: isize,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct LifetimeTy {
     pub name: &'static str,
 }
@@ -42,37 +31,37 @@ pub struct LifetimeTy {
 //     const fn variant(name: &'static str) -> &'static EnumVariant;
 // }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub enum TypeInner {
-    #[default]
+    None,
     Struct(StructTy),
     Enum(EnumTy),
     Union(UnionTy),
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct StructTy {
     pub fields: &'static [Field],
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct EnumTy {
     pub variants: &'static [EnumVariant],
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct UnionTy {
     pub fields: &'static [Field],
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct EnumVariant {
     pub fields: &'static [Field],
     pub discriminant: DiscriminantTy,
     pub value: Option<isize>, // Value of C-style enums
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Field {
     /// Field type
     pub field_type: Type,
@@ -95,7 +84,7 @@ pub struct Field {
 //     }
 // }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct Generic {
     pub ty: Type,
     pub default: Option<Type>,

@@ -8,6 +8,9 @@ struct Foo<'a, T: 'a> {
 }
 
 fn main() {
-    println!("{:?}", Foo::<i32>::typeinfo());
-    println!("{:?}", Foo::<i32>::typeinfo().lifetimes);
+    let x = Foo {
+        field: &32i32,
+    };
+    println!("{:?}", x.typeinfo());
+    println!("{:?}", x.typeinfo().lifetimes);
 }

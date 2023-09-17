@@ -86,8 +86,9 @@ pub struct FieldInfo {
 
 #[derive(Clone, Debug)]
 pub struct GenericInfo {
-    pub ty: TypeInfo,
-    pub default: Option<TypeInfo>,
+    pub name: &'static str,
+    // pub ty: TypeInfo,
+    // pub default: Option<TypeInfo>,
 }
 
 // impl StructTy { // similar for EnumTy with Variant

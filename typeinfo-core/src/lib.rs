@@ -11,7 +11,6 @@ pub struct Type {
     pub lifetimes: &'static [LifetimeTy],
 }
 
-
 #[derive(Clone, Debug)]
 pub struct DiscriminantTy {
     pub name: &'static str,
@@ -34,13 +33,13 @@ pub struct LifetimeTy {
 #[derive(Clone, Debug)]
 pub enum TypeInner {
     None,
-    Struct(StructTy),
+    Struct(StructInfo),
     Enum(EnumTy),
     Union(UnionTy),
 }
 
 #[derive(Clone, Debug)]
-pub struct StructTy {
+pub struct StructInfo {
     pub fields: &'static [Field],
 }
 

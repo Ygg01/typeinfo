@@ -5,10 +5,10 @@ use core::alloc::Layout;
 #[derive(Clone, Debug)]
 pub struct TypeInfo {
     pub name: &'static str,
-    pub inner: InnerTypeInfo,
-    pub layout: Layout,
     pub generics: &'static [GenericInfo],
     pub lifetimes: &'static [LifetimeInfo],
+    pub inner: InnerTypeInfo,
+    pub layout: Layout,
 }
 
 #[derive(Clone, Debug)]
@@ -32,17 +32,21 @@ pub struct LifetimeInfo {
 
 #[derive(Clone, Debug)]
 pub enum InnerTypeInfo {
-    // todo remove
-    None,
+    UnitType,
     Struct(StructInfo),
     Enum(EnumInfo),
     Union(UnionEnumInfo),
+    Function(FunctionInfo),
+    Slice(SliceInfo),
+    Array(ArrayInfo),
+    Tuple(TupleInfo),
 }
 
 #[derive(Clone, Debug)]
 pub struct StructInfo {
     pub fields: &'static [FieldInfo],
 }
+
 
 #[derive(Clone, Debug)]
 pub struct EnumInfo {
@@ -60,6 +64,26 @@ pub struct EnumVariantInfo {
     pub discriminant: DiscriminantInfo,
     pub value: Option<isize>, // Value of C-style enums
 }
+
+#[derive(Clone, Debug)]
+pub struct FunctionInfo {
+    pub fields: &'static [FieldInfo],
+}
+
+#[derive(Clone, Debug)]
+pub struct SliceInfo {
+    pub fields: &'static [FieldInfo],
+}
+
+#[derive(Clone, Debug)]
+pub struct ArrayInfo {
+    pub fields: &'static [FieldInfo],
+}
+#[derive(Clone, Debug)]
+pub struct TupleInfo {
+    pub fields: &'static [FieldInfo],
+}
+
 
 #[derive(Clone, Debug)]
 pub struct FieldInfo {

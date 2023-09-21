@@ -39,7 +39,7 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
                 use core::alloc::Layout;
                 ::typeinfo_core::TypeInfo {
                     name: &#ident_str,
-                    inner:  ::typeinfo_core::InnerTypeInfo::None,
+                    inner:  ::typeinfo_core::InnerTypeInfo::UnitType,
                     layout: Layout::new::<#name #ty_generics>(),
                     generics: #generics,
                     lifetimes: #lifetimes,

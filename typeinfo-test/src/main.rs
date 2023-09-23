@@ -1,5 +1,3 @@
-mod expanded;
-
 use typeinfo_macro::Reflect;
 
 #[derive(Reflect)]

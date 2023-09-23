@@ -1,6 +1,24 @@
 #!feature[const_trait_impl]
 use core::alloc::Layout;
 
+const fn const_bytes_equal(lhs: &[u8], rhs: &[u8]) -> bool {
+    if lhs.len() != rhs.len() {
+        return false;
+    }
+    let mut i = 0;
+    while i < lhs.len() {
+        if lhs[i] != rhs[i] {
+            return false;
+        }
+        i += 1;
+    }
+    true
+}
+
+const fn const_str_equal(lhs: &str, rhs: &str) -> bool {
+    const_bytes_equal(lhs.as_bytes(), rhs.as_bytes())
+}
+
 /// Result of `typeinfo!`
 #[derive(Clone, Debug)]
 pub struct TypeInfo {
@@ -45,6 +63,22 @@ pub enum InnerTypeInfo {
 #[derive(Clone, Debug)]
 pub struct StructInfo {
     pub fields: &'static [FieldInfo],
+}
+
+impl StructInfo {
+    pub const fn fields(&self, field_name: &'static str) -> Option<&FieldInfo> {
+        let mut i = 0;
+
+        while i < self.fields.len() {
+            if let Some(field) = self.fields[i].name {
+                if const_str_equal(field, field_name) {
+                    return Some(&self.fields[i]);
+                }
+            }
+            i += 1;
+        }
+        None
+    }
 }
 
 

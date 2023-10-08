@@ -10,5 +10,4 @@ fn main() {
         field: &32i32,
     };
     println!("{:?}", x.typeinfo());
-    println!("{:?}", x.typeinfo().lifetimes);
 }

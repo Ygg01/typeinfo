@@ -7,7 +7,7 @@ use proc_macro::TokenStream;
 
 use proc_macro2::TokenStream as TokenStream2;
 use quote::{quote, ToTokens};
-use syn::{Data, DeriveInput, Fields, GenericParam, LifetimeParam, Type, TypeParam};
+use syn::{Data, DeriveInput, Fields, GenericParam, Generics, Lifetime, LifetimeParam, Type, TypeParam};
 
 use typeinfo_core::Reflect;
 
@@ -24,11 +24,11 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
     let generics = &ast.generics;
 
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
-    let lifetimes = get_lifetimes(generics.lifetimes());
-    let generics = get_generics(generics.type_params());
+    // let lifetimes = get_lifetimes(generics.lifetimes());
+    // let generics = get_generics(generics.type_params());
 
     let inner = match ast.data {
-        Data::Struct(ref struct_data) => get_fields(&struct_data.fields),
+        Data::Struct(ref struct_data) => get_struct(&ident_str, &struct_data.fields, generics),
         _ => panic!("Only Structs are supported. Enums/Unions cannot be turned into Generics."),
     };
     quote! {
@@ -37,20 +37,14 @@ fn impl_generics(input: TokenStream) -> impl ToTokens {
 
             const fn typeinfo(&self) -> ::typeinfo_core::TypeInfo {
                 use core::alloc::Layout;
-                ::typeinfo_core::TypeInfo {
-                    name: &#ident_str,
-                    inner:  ::typeinfo_core::InnerTypeInfo::UnitType,
-                    layout: Layout::new::<#name #ty_generics>(),
-                    generics: #generics,
-                    lifetimes: #lifetimes,
-                }
+                #inner
 
             }
         }
     }
 }
 
-fn get_generics<'a>(lifetimes: impl Iterator<Item = &'a TypeParam>) -> impl ToTokens {
+fn get_generics<'a>(lifetimes: impl Iterator<Item=&'a TypeParam>) -> impl ToTokens {
     let mut start = TokenStream2::default();
 
     let lifetimes: Vec<_> = lifetimes
@@ -68,9 +62,7 @@ fn get_generics<'a>(lifetimes: impl Iterator<Item = &'a TypeParam>) -> impl ToTo
 }
 
 
-
-
-fn get_lifetimes<'a>(lifetimes: impl Iterator<Item = &'a LifetimeParam>) -> impl ToTokens {
+fn get_lifetimes<'a>(lifetimes: impl Iterator<Item=&'a LifetimeParam>) -> impl ToTokens {
     let mut start = TokenStream2::default();
 
     let lifetimes: Vec<_> = lifetimes
@@ -87,13 +79,18 @@ fn get_lifetimes<'a>(lifetimes: impl Iterator<Item = &'a LifetimeParam>) -> impl
     start
 }
 
-fn get_fields(fields: &Fields) -> impl ToTokens {
+fn get_struct(name: &str, fields: &Fields, generics: &Generics) -> impl ToTokens {
     let mut start = TokenStream2::default();
 
+    start.extend(quote!(
+        ::typeinfo_core::TypeInfo::Struct(::typeinfo_core::StructInfo {
+            name: #name,
+            lifetimes: &[],
+            fields: &[],
+        })
+    ));
     // let mut fields : Vec<Field> = vec![];
-    for field in fields {
-
-    }
+    for field in fields {}
     // let fields = fields.leak();
     // StructInfo {
     //     fields,

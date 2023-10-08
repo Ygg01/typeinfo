@@ -21,12 +21,15 @@ const fn const_str_equal(lhs: &str, rhs: &str) -> bool {
 
 /// Result of `typeinfo!`
 #[derive(Clone, Debug)]
-pub struct TypeInfo {
-    pub name: &'static str,
-    pub generics: &'static [GenericInfo],
-    pub lifetimes: &'static [LifetimeInfo],
-    pub inner: InnerTypeInfo,
-    pub layout: Layout,
+pub enum TypeInfo {
+    UnitType,
+    Struct(StructInfo),
+    Enum(EnumInfo),
+    Union(UnionEnumInfo),
+    Function(FunctionInfo),
+    Slice(SliceInfo),
+    Array(ArrayInfo),
+    Tuple(TupleInfo),
 }
 
 #[derive(Clone, Debug)]
@@ -48,20 +51,11 @@ pub struct LifetimeInfo {
 //     const fn variant(name: &'static str) -> &'static EnumVariant;
 // }
 
-#[derive(Clone, Debug)]
-pub enum InnerTypeInfo {
-    UnitType,
-    Struct(StructInfo),
-    Enum(EnumInfo),
-    Union(UnionEnumInfo),
-    Function(FunctionInfo),
-    Slice(SliceInfo),
-    Array(ArrayInfo),
-    Tuple(TupleInfo),
-}
 
 #[derive(Clone, Debug)]
 pub struct StructInfo {
+    pub name: &'static str,
+    pub lifetimes: &'static [LifetimeInfo],
     pub fields: &'static [FieldInfo],
 }
 

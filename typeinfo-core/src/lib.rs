@@ -38,7 +38,7 @@ pub struct DiscriminantInfo {
     pub discriminant: isize,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct LifetimeInfo {
     pub name: &'static str,
 }
@@ -117,7 +117,6 @@ pub struct FieldInfo {
 
 #[derive(Clone, Debug)]
 pub struct GenericInfo {
-    pub name: &'static str,
     pub ty: TypeInfo,
 }
 

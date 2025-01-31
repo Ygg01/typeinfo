@@ -1,5 +1,4 @@
 #!feature[const_trait_impl]
-use core::alloc::Layout;
 
 const fn const_bytes_equal(lhs: &[u8], rhs: &[u8]) -> bool {
     if lhs.len() != rhs.len() {
@@ -43,14 +42,6 @@ pub struct DiscriminantInfo {
 pub struct LifetimeInfo {
     pub name: &'static str,
 }
-
-// impl Type {
-//     /// Defer to `StructTy::field`, panic if not a struct
-//     const fn field(name: &'static str) -> &'static StructField;
-//     /// Defer to `EnumTy::variant`, panic if not an enum
-//     const fn variant(name: &'static str) -> &'static EnumVariant;
-// }
-
 
 #[derive(Clone, Debug)]
 pub struct StructInfo {
@@ -112,7 +103,6 @@ pub struct TupleInfo {
     pub fields: &'static [FieldInfo],
 }
 
-
 #[derive(Clone, Debug)]
 pub struct FieldInfo {
     /// Field type
@@ -125,27 +115,10 @@ pub struct FieldInfo {
     pub offset: usize,
 }
 
-// impl Field {
-//     // Helpers to get or set a field on the parent struct
-//     // Not sure what this would do for enums
-//     const fn getter(&self) -> (fn(&ParentTy) -> SelfTy) {
-
-//     }
-//     const fn setter(&self) -> fn(&mut ParentTy, SelfTy) {
-
-//     }
-// }
-
 #[derive(Clone, Debug)]
 pub struct GenericInfo {
     pub name: &'static str,
-    // pub ty: TypeInfo,
-    // pub default: Option<TypeInfo>,
+    pub ty: TypeInfo,
 }
-
-// impl StructTy { // similar for EnumTy with Variant
-//     /// Get a field by name at compile time, compile_error if it doesn't exist
-//     const fn field(name: &'static str) -> &'static Field;
-// }
 
 pub trait Reflect {}
